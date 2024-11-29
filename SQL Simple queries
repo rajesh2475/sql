@@ -33,3 +33,7 @@ Where                      group by           Note - Here group by and select ca
 group by                   select 
 order by                   order by
 
+
+select to_char(order_date, 'YYYY-MM') as order_month, count (*) as order_count from orders where order_status in ('COMPLETE', 'CLOSED') group by 1 Having count (*) > 1000 order by 2
+
+
