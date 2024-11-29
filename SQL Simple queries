@@ -24,3 +24,12 @@ select to_char(order_date, 'YYYY-MM') as order_month, count (*) as order_count f
 
 select order_item_order_id, round(sum(order_item_subtotal)::numeric, 2) as order_revenue from order_items group by 1 order by 1;
 
+
+
+Order of query             order of execution
+Select                     From 
+From                       Where
+Where                      group by           Note - Here group by and select can work together (in case of Aggregate functions)
+group by                   select 
+order by                   order by
+
