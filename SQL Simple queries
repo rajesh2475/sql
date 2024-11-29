@@ -1,0 +1,26 @@
+Aggregate functions are often used with the GROUP BY clause of the SELECT statement. The GROUP BY clause splits the result-set into groups of values and the aggregate function can be used to return a single value for each group.
+
+The most commonly used SQL aggregate functions are:
+
+MIN() - returns the smallest value within the selected column
+MAX() - returns the largest value within the selected column
+COUNT() - returns the number of rows in a set
+SUM() - returns the total sum of a numerical column
+AVG() - returns the average value of a numerical column
+Aggregate functions ignore null values (except for COUNT()).
+
+select * from orders limit 10;
+
+select * from orders limit 1,1;  // SQL
+select * from orders limit 1, offset 1; // Postgres
+select count(*) from orders;
+
+order by desc or asc (default)
+
+select destinct order_statue from orders;
+select * from orders where order_statue = "COMPLETE" or order_statue = "CLOSED";
+
+select to_char(order_date, 'YYYY-MM') as order_month, count (*) as order_count from orders where order_status in ('COMPLETE', 'CLOSED') group by 1 order by 2;   - here 1 refers ro first column of results in select
+
+select order_item_order_id, round(sum(order_item_subtotal)::numeric, 2) as order_revenue from order_items group by 1 order by 1;
+
