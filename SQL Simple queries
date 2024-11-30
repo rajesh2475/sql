@@ -48,3 +48,29 @@ inner join order_items on order_id = order_item_order_id
 where order_status in ('COMPLETE', 'CLOSED')
 group by 1,2 order by 3
 
+
+Working 
+  SELECT *
+  FROM products AS p
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM order_details_v AS odv
+    WHERE p.product_id = odv.order_item_product_id
+      AND TO_CHAR(odv.order_date::timestamp, 'YYYY-MM') = '2014-02'
+  );
+  
+  SELECT *
+  FROM products AS p
+  LEFT OUTER JOIN order_details_v AS odv
+  ON p.product_id = odv.order_item_product_id
+  WHERE odv.order_item_product_id IS NULL
+     OR (TO_CHAR(odv.order_date::timestamp, 'YYYY-MM') = '2014-02');
+
+Not working 
+SELECT *
+FROM products AS p
+LEFT OUTER JOIN order_details_v AS odv
+ON p.product_id = odv.order_item_product_id
+WHERE TO_CHAR(odv.order_date::timestamp, 'YYYY-MM') = '2014-02'
+  AND odv.order_item_product_id IS NULL;
+
