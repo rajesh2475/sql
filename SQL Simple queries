@@ -74,3 +74,56 @@ ON p.product_id = odv.order_item_product_id
 WHERE TO_CHAR(odv.order_date::timestamp, 'YYYY-MM') = '2014-02'
   AND odv.order_item_product_id IS NULL;
 
+
+# views
+1. views do not hold any data
+2. We create views using queries against the tables
+3. we typically create views for commonly used queries
+
+EX 
+Create view <view name> as 
+Quary
+
+To recreate the view we use
+Create or replace view <view name> as 
+Quary
+
+
+
+CTE (common table expression)
+Ex 
+with <name_of_the_query> as 
+Query
+
+CTE is similar to views but they don't store definition within the database, Once We restart the session CTE will be deleted. 
+
+# ctas (create table as results)
+
+DROP TABLE daily_revinue;
+Create table daily_revinue
+as 
+select o.order_date, round(sum(oi.order_item_subtotal):: numeric, 2) as order_revinue
+from orders as o
+join order_items as oi
+on o.order_id = oi.order_item_order_id
+where o.order_status in ('CLOSED', 'COMPLETE')
+group by 1
+
+select to_char(dr.order_date::timestamp, 'YYYY-MM'), 
+dr.order_date ,  dr.order_revinue,  sum(dr.order_revinue) as  
+monthly_order_revinue from daily_revinue as dr
+group by 1, 2, 3
+
+# PARTITION and over
+select to_char(dr.order_date::timestamp, 'YYYY-MM') as order_months, 
+dr.order_date ,  dr.order_revinue,  sum(dr.order_revinue) over (PARTITION by to_char(dr.order_date::timestamp, 'YYYY-MM')) as  
+monthly_order_revinue from daily_revinue as dr
+
+
+
+
+
+
+
+
+
