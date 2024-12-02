@@ -25,6 +25,17 @@ select to_char(order_date, 'YYYY-MM') as order_month, count (*) as order_count f
 select order_item_order_id, round(sum(order_item_subtotal)::numeric, 2) as order_revenue from order_items group by 1 order by 1;
 
 
+Create table daily_product_revinue as
+select  o.order_date, oi.order_item_product_id, 
+round(sum(order_item_subtotal)::numeric, 2) as order_revinue from orders as o
+inner join order_items as oi on o.order_id = oi.order_item_product_id
+where o.order_status in ('CLOSED', 'COMPLETE')
+group by o.order_date, oi.order_item_product_id;
+
+select dpr.*, rank() over (order by order_revinue desc) as rnk, dense_rank() over (order by order_revinue desc) as drnk 
+from daily_product_revinue as dpr where order_date = '2013-07-29 00:00:00' order by order_revinue desc
+
+
 
 Order of query             order of execution
 Select                     From 
