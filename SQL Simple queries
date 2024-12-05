@@ -131,6 +131,60 @@ dr.order_date ,  dr.order_revinue,  sum(dr.order_revinue) over (PARTITION by to_
 monthly_order_revinue from daily_revinue as dr
 
 
+emp_id, desg,      p_date
+10       mgr       01-APR-2023
+10       sr mgr    01-JAN-2024
+20       se        01-APR-2022
+20       sr se     01-JAN-2024
+
+emp_id	o_desg	desg	P_old	p_date
+10	mgr	sr mgr	01-APR-2023	01-JAN-2024
+20	se	sr se	01-APR-2022	01-JAN-2024
+
+
+SELECT 
+    e1.emp_id,
+    e1.desg AS o_desg,
+    e2.desg AS desg,
+    e1.p_date AS P_old,
+    e2.p_date AS p_date
+FROM 
+    employee e1
+JOIN 
+    employee e2
+ON 
+    e1.emp_id = e2.emp_id
+AND 
+    e1.p_date < e2.p_date
+WHERE 
+    MONTHS_BETWEEN(TO_DATE(e2.p_date, 'DD-MON-YYYY'), TO_DATE(e1.p_date, 'DD-MON-YYYY')) < 12;
+
+
+Product city sales
+ p1     hyd   100
+ p1     chn   80
+ p1     bag   70
+ p2     hyd   100
+ p2     chn   80
+ p2     bag   70
+
+# output
+Product hyd chn bag
+   p1    100 80 70  
+   p2    100 80 70 
+
+SELECT 
+    Product,
+    MAX(CASE WHEN city = 'hyd' THEN sales END) AS hyd,
+    MAX(CASE WHEN city = 'chn' THEN sales END) AS chn,
+    MAX(CASE WHEN city = 'bag' THEN sales END) AS bag
+FROM 
+    your_table
+GROUP BY 
+    Product;
+
+
+
 
 
 
